@@ -27,7 +27,7 @@ public class StudentService {
     public Student addStudent(String regNo, String fullName, String email) {
         // Assert that the registration number is valid.
         assert regNo != null && !regNo.trim().isEmpty() : "Registration number cannot be null or empty";
-        
+
         long newId = nextId++;
         Student newStudent = new Student(newId, regNo, fullName, email);
         studentMap.put(newId, newStudent);
@@ -50,5 +50,18 @@ public class StudentService {
      */
     public List<Student> getAllStudents() {
         return new ArrayList<>(studentMap.values());
+    }
+
+    /**
+     * Loads a student with a specific ID from a data file.
+     * Also ensures the nextId counter is updated to avoid collisions.
+     */
+    public void loadStudent(long id, String regNo, String fullName, String email) {
+        Student student = new Student(id, regNo, fullName, email);
+        studentMap.put(id, student);
+        // Make sure our ID generator doesn't create duplicate IDs
+        if (id >= nextId) {
+            nextId = id + 1;
+        }
     }
 }
